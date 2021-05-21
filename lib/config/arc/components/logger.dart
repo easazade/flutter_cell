@@ -1,4 +1,4 @@
-abstract class ArcLogger {
+abstract class CellLogger {
   void log(anything);
 
   void footprint(anything);
@@ -6,7 +6,7 @@ abstract class ArcLogger {
   void report(error, stacktrace);
 }
 
-class DefaultLogger extends ArcLogger {
+class DefaultCellLogger extends CellLogger {
   @override
   void footprint(anything) {
     print(anything.toString());

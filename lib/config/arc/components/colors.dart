@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-abstract class ArcColors {
+abstract class CellColors {
   Color get accent;
 
   Color get textLight;
@@ -16,7 +16,7 @@ abstract class ArcColors {
   Color get defaultBg;
 }
 
-class DefaultColors extends ArcColors {
+class DefaultCellColors extends CellColors {
   @override
   Color get accent => Colors.blueAccent;
 

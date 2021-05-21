@@ -9,10 +9,10 @@ import 'package:flutter_cell/ui/utils/app_progress.dart';
 import 'package:flutter_cell/utils/action_error.dart';
 import 'package:flutter_cell/utils/retry_action.dart';
 
-import 'cube_state.dart';
+import 'cell_state.dart';
 
-abstract class BaseCube extends ChangeNotifier {
-  CubeState _state;
+abstract class BaseCell extends ChangeNotifier {
+  CellState _state;
   Message? _message;
   RetryAction? currentErrorRetryAction;
   String? currentErrorMsg;
@@ -22,12 +22,15 @@ abstract class BaseCube extends ChangeNotifier {
   final List<StreamSubscription> subscriptions = [];
   Queue<RetryAction> retryOnConnectionActions = Queue();
 
-  BaseCube([this._state = CubeState.STARTED]) {
+  BaseCell([this._state = CellState.STARTED]) {
     if (Architecture.instance.connectivity != null) {
-      subscriptions.add(Architecture.instance.connectivity!.watch.listen((status) {
+      subscriptions
+          .add(Architecture.instance.connectivity!.watch.listen((status) {
         Architecture.instance.logger.log('CUBIT CONNECTIVITY CHECK ');
-        Architecture.instance.logger.log('HAS CONNECTION -> ${status != ConnectionStatus.NONE}');
-        if (status != ConnectionStatus.NONE && retryOnConnectionActions.isNotEmpty) {
+        Architecture.instance.logger
+            .log('HAS CONNECTION -> ${status != ConnectionStatus.NONE}');
+        if (status != ConnectionStatus.NONE &&
+            retryOnConnectionActions.isNotEmpty) {
           Architecture.instance.logger.log('RETRYING ACTIONS');
           while (retryOnConnectionActions.isNotEmpty) {
             retryOnConnectionActions.removeLast().tryAgain();
@@ -39,47 +42,49 @@ abstract class BaseCube extends ChangeNotifier {
 
   String get tag => 'NO-TAG - (override tag)';
 
-  bool get isIdle => _state == CubeState.IDLE;
+  bool get isIdle => _state == CellState.IDLE;
 
-  bool get isOffline => _state == CubeState.OFFLINE;
+  bool get isOffline => _state == CellState.OFFLINE;
 
-  bool get isIdleOrOffline => _state == CubeState.OFFLINE || _state == CubeState.IDLE;
+  bool get isIdleOrOffline =>
+      _state == CellState.OFFLINE || _state == CellState.IDLE;
 
-  bool get hasNoConnection => _state == CubeState.NEEDS_CONNECTION;
+  bool get hasNoConnection => _state == CellState.NEEDS_CONNECTION;
 
-  bool get inProgress => _state == CubeState.PROGRESS;
+  bool get inProgress => _state == CellState.PROGRESS;
 
-  bool get isStarted => _state == CubeState.STARTED;
+  bool get isStarted => _state == CellState.STARTED;
 
-  bool get hasError => _state == CubeState.ERROR;
+  bool get hasError => _state == CellState.ERROR;
 
-  void update([CubeState state = CubeState.IDLE]) {
+  void update([CellState state = CellState.IDLE]) {
     this._state = state;
     emitChanges();
   }
 
   void progress() {
-    this._state = CubeState.PROGRESS;
+    this._state = CellState.PROGRESS;
     emitChanges();
   }
 
   void offline() {
-    this._state = CubeState.OFFLINE;
+    this._state = CellState.OFFLINE;
     emitChanges();
   }
 
-  void needsConnection({required VoidCallback retry, bool retryOnConnection = true}) {
+  void needsConnection(
+      {required VoidCallback retry, bool retryOnConnection = true}) {
     var retryAction = RetryAction(retry);
     if (retryOnConnection) {
       retryOnConnectionActions.addFirst(retryAction);
     }
     currentNeedsConnectionRetryAction = retryAction;
-    this._state = CubeState.NEEDS_CONNECTION;
+    this._state = CellState.NEEDS_CONNECTION;
     emitChanges();
   }
 
   void error({required String msg, required VoidCallback retry}) {
-    this._state = CubeState.ERROR;
+    this._state = CellState.ERROR;
     currentErrorMsg = msg;
     currentErrorRetryAction = RetryAction(retry);
     emitChanges();
@@ -104,30 +109,36 @@ abstract class BaseCube extends ChangeNotifier {
   }
 
   Widget toWidget() {
-    if (_state == CubeState.IDLE || _state == CubeState.OFFLINE) {
-      throw Exception('toWidget cannot be called when CubeState is IDLE & OFFLINE');
-    } else if (_state == CubeState.STARTED) {
+    if (_state == CellState.IDLE || _state == CellState.OFFLINE) {
+      throw Exception(
+          'toWidget cannot be called when CubeState is IDLE & OFFLINE');
+    } else if (_state == CellState.STARTED) {
       return Material(
         color: Architecture.instance.colors.defaultBg,
         child: Container(),
       );
-    } else if (_state == CubeState.PROGRESS) {
+    } else if (_state == CellState.PROGRESS) {
       return Material(
         color: Architecture.instance.colors.defaultBg,
         child: Center(child: ArcProgress.large(color: Colors.blueAccent)),
       );
-    } else if (_state == CubeState.ERROR) {
+    } else if (_state == CellState.ERROR) {
       return Material(
         color: Architecture.instance.colors.defaultBg,
-        child: Center(child: ActionError(currentErrorMsg!, currentErrorRetryAction!).widget()),
+        child: Center(
+            child: ActionError(currentErrorMsg!, currentErrorRetryAction!)
+                .widget()),
       );
-    } else if (_state == CubeState.NEEDS_CONNECTION) {
+    } else if (_state == CellState.NEEDS_CONNECTION) {
       return Material(
         color: Architecture.instance.colors.defaultBg,
-        child: Center(child: ActionError.notConnected(currentNeedsConnectionRetryAction!).widget()),
+        child: Center(
+            child: ActionError.notConnected(currentNeedsConnectionRetryAction!)
+                .widget()),
       );
     } else
-      throw Exception('unknown state - this state of cube cannot be converted to widget');
+      throw Exception(
+          'unknown state - this state of cube cannot be converted to widget');
   }
 
   void onDispose() {}
@@ -147,17 +158,17 @@ abstract class BaseCube extends ChangeNotifier {
 
   void printCubeState() {
     String stateIcon;
-    if (_state == CubeState.PROGRESS) {
+    if (_state == CellState.PROGRESS) {
       stateIcon = '🕓';
-    } else if (_state == CubeState.IDLE) {
+    } else if (_state == CellState.IDLE) {
       stateIcon = '✅';
-    } else if (_state == CubeState.ERROR) {
+    } else if (_state == CellState.ERROR) {
       stateIcon = '⛔';
-    } else if (_state == CubeState.OFFLINE) {
+    } else if (_state == CellState.OFFLINE) {
       stateIcon = '🔵';
-    } else if (_state == CubeState.STARTED) {
+    } else if (_state == CellState.STARTED) {
       stateIcon = '🔥';
-    } else if (_state == CubeState.NEEDS_CONNECTION) {
+    } else if (_state == CellState.NEEDS_CONNECTION) {
       stateIcon = '📡';
     } else {
       stateIcon = '😕';

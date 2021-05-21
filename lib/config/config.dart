@@ -5,29 +5,27 @@ import 'arc/components/logic_connectivity.dart';
 import 'arc/components/strings.dart';
 import 'arc/components/toasts.dart';
 
-class ArchitectureConfig {
+class CellConfig {
   //TODO add save instance state stuff here
 
-  final ArcConnectivity? connectivity;
-  final ArcLogger logger;
-  final ArcColors colors;
-  final ArcToasts toasts;
-  final ArcProviders providers;
-  final ArcStrings strings;
+  final CellConnectivity? connectivity;
+  final CellLogger logger;
+  final CellColors colors;
+  final CellToasts toasts;
+  final CellProviders providers;
+  final CellStrings strings;
 
-  ArchitectureConfig({
-    ArcLogger? logger,
-    ArcColors? colors,
-    ArcToasts? toasts,
-    ArcProviders? providers,
-    ArcStrings? strings,
-    ArcConnectivity? connectivity,
-  })  : this.logger = logger ?? DefaultLogger(),
-        this.colors = colors ?? DefaultColors(),
-        this.toasts = toasts ?? DefaultToasts(),
-        this.providers = providers ?? DefaultProviders(),
-        this.strings = strings ?? DefaultStrings(),
+  CellConfig({
+    CellLogger? logger,
+    CellColors? colors,
+    CellToasts? toasts,
+    CellProviders? providers,
+    CellStrings? strings,
+    CellConnectivity? connectivity,
+  })  : this.logger = logger ?? DefaultCellLogger(),
+        this.colors = colors ?? DefaultCellColors(),
+        this.toasts = toasts ?? DefaultCellToasts(),
+        this.providers = providers ?? DefaultCellProviders(),
+        this.strings = strings ?? DefaultCellStrings(),
         this.connectivity = connectivity;
-
-
 }

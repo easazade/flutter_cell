@@ -10,19 +10,19 @@ import 'config/arc/components/toasts.dart';
 class Architecture {
   Architecture._();
 
-  ArchitectureConfig config = ArchitectureConfig();
+  CellConfig config = CellConfig();
 
   static final Architecture instance = Architecture._();
 
-  ArcConnectivity? get connectivity => config.connectivity;
+  CellConnectivity? get connectivity => config.connectivity;
 
-  ArcLogger get logger => config.logger;
+  CellLogger get logger => config.logger;
 
-  ArcColors get colors => config.colors;
+  CellColors get colors => config.colors;
 
-  ArcToasts get toasts => config.toasts;
+  CellToasts get toasts => config.toasts;
 
-  ArcStrings get strings => config.strings;
+  CellStrings get strings => config.strings;
 
-  ArcProviders get providers => config.providers;
+  CellProviders get providers => config.providers;
 }

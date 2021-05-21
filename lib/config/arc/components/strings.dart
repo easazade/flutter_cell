@@ -1,10 +1,10 @@
-abstract class ArcStrings {
+abstract class CellStrings {
   String get noConnection;
 
   String get pleaseWait;
 }
 
-class DefaultStrings extends ArcStrings {
+class DefaultCellStrings extends CellStrings {
   String get noConnection => 'no connection';
 
   String get pleaseWait => 'please wait';

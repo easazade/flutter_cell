@@ -1,12 +1,12 @@
 import 'package:flutter_cell/architecture.dart';
 import 'package:flutter_cell/config/config.dart';
-import 'package:flutter_cell/core/cube_provider.dart';
+import 'package:flutter_cell/core/cell_provider.dart';
 import 'package:example/screens/cell/config/cell_config.dart';
 import 'package:example/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  Architecture.instance.config = ArchitectureConfig(providers: MyProviders());
+  Architecture.instance.config = CellConfig(providers: MyProviders());
   runApp(MyApp());
 }
 
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
 class ExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return CubeProvider(
+    return CellProvider(
       child: MaterialApp(
         home: HomeScreen(),
       ),
