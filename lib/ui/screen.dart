@@ -26,18 +26,23 @@ class _ScreenState<T extends BaseCell> extends State<Screen<T>> {
   T? cellInstance;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, watch, child) {
       if (_provider == null) {
         _provider = Architecture.instance.providers.getCellProvider<T>();
         cellInstance = watch(_provider!);
-        // WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-        widget.initialize(cellInstance!);
-        // });
+        WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+          widget.initialize(cellInstance!);
+        });
       } else {
         cellInstance = watch(_provider!);
       }
-      cellInstance!.displayMessage(context);
+      cellInstance!.displayMessageIfAny(context);
       return widget.buildScreen(context, cellInstance!);
     });
   }

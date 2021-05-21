@@ -95,7 +95,7 @@ abstract class BaseCell extends ChangeNotifier {
     emitChanges();
   }
 
-  void displayMessage(BuildContext context) => _message?.show(context);
+  void displayMessageIfAny(BuildContext context) => _message?.show(context);
 
   Future<bool> hasConnection() async {
     var connectivity = Architecture.instance.connectivity;
